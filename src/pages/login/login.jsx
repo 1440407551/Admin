@@ -1,6 +1,9 @@
 import React from 'react'
-import { Form, Icon, Input, Button } from 'antd'
+import { Redirect } from 'react-router-dom'
+import { Form, Icon, Input, Button, message } from 'antd'
 
+import storageUtils from '../../utils/storageUtils'
+import { reqLogin } from '../../api/index'
 import logo from './images/logo.png'
 import './login.less'
 
@@ -20,9 +23,21 @@ class Login extends React.Component {
         // console.log(values, username, password);
 
         // 对表单所有字段进行统一的验证
-        this.props.form.validateFields((err, {username, password}) => {
+        this.props.form.validateFields(async (err, { username, password }) => {
             if (!err) {
-                console.log(`发送ajax请求，username=${username}, password=${password}`)
+                const result = await reqLogin(username, password)
+                if (result.status === 0) {
+                    // 将 user 信息保存到 local
+                    const user = result.data
+                    // localStorage.setItem('user_key', JSON.stringify(user))
+                    storageUtils.saveUser(user)
+                    
+                    // 跳转到管理界面
+                    message.success('登录成功')
+                    this.props.history.replace('/')
+                } else {
+                    message.error(result.msg)
+                }
             }
         })
     };
@@ -46,6 +61,14 @@ class Login extends React.Component {
 
     }
     render() {
+
+        // 读取保存的 user，如果存在，直接跳转到管理界面
+        const user = storageUtils.getUser()
+        if (user._id) {
+            // this.props.history.replace('/login') // 事件回调函数中进行路由跳转
+            return <Redirect to="/" /> // 自动跳转到指定的路由路径
+        }
+
         const { getFieldDecorator } = this.props.form
         return (
             <div className="login">
@@ -89,8 +112,6 @@ class Login extends React.Component {
                                     />
                                 )
                             }
-
-
                         </Item>
                         <Item>
                             <Button type="primary" htmlType="submit" className="login-form-button">
