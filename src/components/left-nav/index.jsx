@@ -46,9 +46,6 @@ class LeftNav extends React.Component {
                 if (cItem) {
                     this.openKey = item.key
                 }
-                
-
-
                 pre.push(
                     <SubMenu
                         key={item.key}
@@ -99,28 +96,45 @@ class LeftNav extends React.Component {
         })
     }
 
+    /**
+     * 第一次 render() 之后执行 执行一次
+     * 执行异步任务：发 ajax 请求，启动定时器
+     */
+    componentDidMount() {
+
+    }
+
+    /**
+     * 第一次执行 render() 之前执行， 执行一次
+     * 为第一次 render() 做一些同步的准备工作
+     */
+    componentWillMount() {
+        this.menuNodes = this.getMenuNodes2(menuList)
+    }
+
     render() {
 
         // 得到当前请求的路由路径
-        const menuNodes = this.getMenuNodes2(menuList)
+
         const selectKey = this.props.location.pathname
-        console.log('selectKey', selectKey)
-        console.log('openKey', this.openKey)
+        // console.log('selectKey', selectKey)
+        // console.log('openKey', this.openKey)
         return (
             <div className="left-nav">
                 <Link className="left-nav-link" to="/home">
                     <img src={logo} alt="logo" />
                     <h1>硅谷后台</h1>
                 </Link>
-
-                <Menu defaultSelectedKeys={[selectKey]}
+                {/* 
+                    defaultSelectedKeys: 指定默认值后，通过编码更新为其他值，没有更新的效果（总是根据第一次指定的 key 进行显示）
+                    selectedKeys: 总是根据最新指定的 key 进行显示
+                */}
+                <Menu selectedKeys={[selectKey]}
                     defaultOpenKeys={[this.openKey]}
                     mode="inline"
                     theme="dark"
                 >
-                    {
-                        menuNodes
-                    }
+                    {this.menuNodes}
 
                     {/* <Menu.Item key="/home">
                         <Link to="/home">
