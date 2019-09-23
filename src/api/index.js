@@ -22,10 +22,7 @@ export const reqLogin = (username, password) => (
     ajax.post(BASE + '/login', { username, password })
 )
 
-
-
 // 发送 jsonp 请求得到天气信息
-
 export const reqWeather = (city) => {
     return new Promise((resolve, reject) => {
         // 执行器函数：内部去执行异步任务，
@@ -41,22 +38,12 @@ export const reqWeather = (city) => {
             }
         })
     })
-
 }
 
-// export function reqLogin(username, password) {
-//     return ajax({
-//         method: 'post',
-//         url: '/login',
-//         data: { // data是对象，默认使用 json格式 的 请求体 携带参数数据
-//             username,
-//             password
-//         }
-//     })
-// }
-
-// reqLogin('admin', 'admin').then(response => {
-//     console.log('response', response)
-//     const result = response
-//     console.log('请求成功',result)
+// 获取分类列表
+// export const reqCategorys = () => ajax.get(BASE + '/manage/category/list')
+// export const reqCategorys = () => ajax({
+//     // method: 'GET',
+//     url: BASE + '/manage/category/list'
 // })
+export const reqCategorys = () => ajax(BASE + '/manage/category/list')
