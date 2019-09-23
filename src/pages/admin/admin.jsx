@@ -35,7 +35,7 @@ export default class Admin extends React.Component {
                 </Sider>
                 <Layout>
                     <Header />
-                    <Content style={{ background: 'white' }}>
+                    <Content style={{ background: 'white', margin: '20px' }}>
                         <Switch>
                             <Route path="/home" component={Home} />
                             <Route path='/category' component={Category} />
