@@ -72,7 +72,7 @@ export default class Category extends Component {
     // 进行表单验证
     this.form.validateFields(async (err, values) => {
       if (!err) {
-        
+
         // 验证通过后，得到输入数据
         const { categoryName } = values
 
@@ -90,7 +90,7 @@ export default class Category extends Component {
         const action = showStatus === 1 ? '添加' : '修改'
         // 根据响应结果，做不同处理
         this.setState({ showStatus: 0 })
-        
+
         if (result.status === 0) {
           //  重新获取分类列表显示 
           this.getCategorys()
@@ -130,7 +130,10 @@ export default class Category extends Component {
 
     // Card右上角的结构
     const extra = (
-      <Button type="primary" onClick={() => this.setState({ showStatus: 1 })}>
+      <Button type="primary" onClick={() => {
+        this.category = null
+        this.setState({ showStatus: 1 })
+      }}>
         <Icon type="plus" />
         添加
       </Button>
