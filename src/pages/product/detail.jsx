@@ -14,15 +14,15 @@ export default class ProductDetail extends React.Component {
     render() {
         const title = (
             <span>
-                <LinkButton>
+                <LinkButton onClick={() => this.props.history.goBack()}>
                     <Icon type="arrow-left" />
                 </LinkButton>
                 <span>商品详情</span>
             </span>
         )
         return (
-           <Card title={title}>
-
+            <Card title={title}>
+                12344
            </Card>
         )
     }
