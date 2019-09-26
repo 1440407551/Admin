@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="throttle">函数节流测试</button>
+    <button id="debounce">函数防抖测试</button>
+    <script>
+        function handleClick() {
+            console.log('事件处理函数')
+        }
+
+        /**
+         * 函数节流
+         */
+        function throttle(callback, delay) {
+            let start = 0
+            return function () {
+                console.log('throttle')
+                const current = Date.now()
+                // console.log('start', start)
+                // console.log('current', current)
+                if (current - start > delay) {
+                    callback(this, arguments)
+                    start = current
+                }
+            }
+        }
+        document.getElementById('throttle').onclick = throttle(handleClick, 1000)
+
+
+        /**
+         * 函数防抖
+         */
+        function debounce(callback, delay) {
+            return function () {
+                console.log('debounce')
+                const that = this
+                const args = arguments
+                if (callback.timer) {
+                    clearTimeout(callback.timer)
+                }
+                callback.timer = setTimeout(function () {
+                    callback(that, args)
+                    delete callback.timer
+                }, delay)
+            }
+        }
+
+
+        document.getElementById('debounce').onclick = debounce(handleClick, 1000)
+    </script>
+</body>
+
+</html>
