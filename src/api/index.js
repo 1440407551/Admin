@@ -96,8 +96,6 @@ export const reqUpdateStatus = (productId, status) => ajax(BASE + '/manage/produ
     }
 })
 
-// ajax.post(BASE + '/manage/product/updateStatus', {
-//     productId,
-//     status
-// })
+// 删除图片
+export const reqDeleteImg = (name) => ajax.post(BASE + '/manage/img/delete', { name })
 

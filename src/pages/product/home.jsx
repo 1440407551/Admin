@@ -8,6 +8,7 @@ import {
     Table,
     message
 } from 'antd'
+import throttle from 'lodash.throttle'
 
 import { reqProducts, reqSearchProducts, reqUpdateStatus } from '../../api'
 import LinkButton from '../../components/link-button'
@@ -30,7 +31,7 @@ export default class ProductHome extends Component {
     }
 
 
-    updateStatus = async (productId, status) => {
+    updateStatus = throttle(async (productId, status) => {
         // 计算更新后的值
         console.log(status)
         status = status === 1 ? 2 : 1
@@ -41,7 +42,7 @@ export default class ProductHome extends Component {
             // 获取当前页显示
             this.getProducts(this.pageNum)
         }
-    }
+    }, 2000)
 
     initColumns = () => {
         this.columns = [
@@ -115,13 +116,11 @@ export default class ProductHome extends Component {
         console.log(searchName)
         // 发请求获取数据
         let result
-        if (!searchName) {
+        if (!this.isSearch) {
             result = await reqProducts(pageNum, PAGE_SIZE)
         } else {
             result = await reqSearchProducts({ pageNum, pageSize: PAGE_SIZE, searchName, searchType })
         }
-
-
         if (result.status === 0) {
             // 取出数据
             const { total, list } = result.data
@@ -159,7 +158,10 @@ export default class ProductHome extends Component {
                     value={searchName}
                     onChange={(event) => this.setState({ searchName: event.target.value })}
                 />
-                <Button type="primary" onClick={() => this.getProducts(1)}>搜索</Button>
+                <Button type="primary" onClick={() => {
+                    this.isSearch = true
+                    this.getProducts(1)
+                }}>搜索</Button>
             </span>
         )
         const extra = (

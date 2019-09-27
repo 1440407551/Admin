@@ -13,15 +13,24 @@ import { reqCategorys } from '../../api'
 import PicturesWall from './pictures-wall'
 import LinkButton from '../../components/link-button'
 import memoryUtils from '../../utils/memoryUtils'
+import RichTextEditor from './rich-text-editor'
 
 const Item = Form.Item
 const Option = Select.Option
 
 class ProductAddUpdate extends React.Component {
 
+
     state = {
         categorys: []
     }
+
+    constructor(props) {
+        super(props)
+        // 创建ref容器，并保存到组件对象
+        this.pwRef = React.createRef()
+    }
+
 
     getCategorys = async () => {
         const result = await reqCategorys()
@@ -55,6 +64,11 @@ class ProductAddUpdate extends React.Component {
             if (!err) {
                 const { name, desc, price, categoryId } = values
                 console.log('发送请求 ', name, desc, price, categoryId)
+
+
+                // 收集上传的图片文件名的数组
+                const imgs = this.pwRef.current.getImgs()
+                console.log('imgs', imgs)
             }
         })
     }
@@ -159,16 +173,17 @@ class ProductAddUpdate extends React.Component {
                     </Item>
 
                     <Item label="商品价格">
-                        <PicturesWall></PicturesWall>
+                        {/* 将容器交给需要标记的标签对象, 在解析时就会自动将标签对象保存到容器中(属性名为: current, 属性值为: 标签对象) */}
+                        <PicturesWall ref={this.pwRef} imgs={product.imgs} />
                     </Item>
-                    <Item label="商品详情">
-                        <div>商品详情组件</div>
+                    <Item label="商品详情" wrapperCol={{ span: 20 }}>
+                        <RichTextEditor detail={product.detail} />
                     </Item>
                     <Item>
                         <Button type="primary" htmlType="submit">提交</Button>
                     </Item>
                 </Form>
-            </Card>
+            </Card >
         )
     }
 }

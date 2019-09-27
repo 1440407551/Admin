@@ -1,5 +1,9 @@
 import React from 'react'
-import { Upload, Icon, Modal } from 'antd';
+import { Upload, Icon, Modal, message } from 'antd';
+import PropTypes from 'prop-types'
+
+import { BASE_IMG } from '../../utils/Constants'
+import { reqDeleteImg } from '../../api'
 
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -11,19 +15,44 @@ function getBase64(file) {
 }
 
 export default class PicturesWall extends React.Component {
+
+    static propType = {
+        imgs: PropTypes.array
+    }
+
     state = {
         previewVisible: false, // 标识是否显示大图预览
         previewImage: '', // 大图的url或者是base64值
         fileList: [
-            { // 文件信息对象
-                uid: '-1', // 唯一标识
-                name: 'image.png', // 文件名
-                status: 'done', // 状态有：uploading done error removed
-                url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png', // 图片的url
-            },
-
+            // { // 文件信息对象
+            //     uid: '-1', // 唯一标识
+            //     name: 'image.png', // 文件名
+            //     status: 'done', // 状态有：uploading done error removed
+            //     url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png', // 图片的url
+            // },
         ],
     };
+
+    componentWillMount() {
+        // 根据传入的imgs生成fileList并更新
+        const imgs = this.props.imgs
+        if (imgs && imgs.length > 0) {
+            const fileList = imgs.map((img, index) => ({
+                uid: -index, // 唯一标识
+                name: img, // 文件名
+                status: 'done', // 状态有：uploading done error removed
+                url: BASE_IMG + img, // 图片的url
+            }))
+            this.setState({ fileList })
+        }
+    }
+
+
+    /**
+     * 获取所有已上传图片文件名的数组
+     */
+    getImgs = () => this.state.fileList.map((file) => file.name)
+
 
     handleCancel = () => this.setState({ previewVisible: false });
 
@@ -47,10 +76,10 @@ export default class PicturesWall extends React.Component {
      * 在file的状态发生改变的监听回调
      * @param file 当前操作(上传/删除)的file
      */
-    handleChange = ({ file, fileList }) => {
+    handleChange = async ({ file, fileList }) => {
         // file与fileList中的最后一个file代表同个图片的不同对象(数据相同，对象不同)
         console.log('handleChange', file.status, file)
-        if(file.status === 'done') {
+        if (file.status === 'done') {
             // 将数组最后一个file保存到file变量
             file = fileList[fileList.length - 1]
             // 取出响应数据中的图片文件名和url
@@ -58,6 +87,13 @@ export default class PicturesWall extends React.Component {
             // 保存到上传的file对象中
             file.name = name
             file.url = url
+        } else if (file.status === 'removed') { // 删除
+            const result = await reqDeleteImg(file.name)
+            if (result.status === 0) {
+                message.success('删除图片成功!')
+            } else {
+                message.error('删除图片失败!')
+            }
         }
 
         // 更新状态
@@ -65,6 +101,7 @@ export default class PicturesWall extends React.Component {
     };
 
     render() {
+        console.log(this.props.imgs)
         const { previewVisible, previewImage, fileList } = this.state;
         const uploadButton = (
             <div>
