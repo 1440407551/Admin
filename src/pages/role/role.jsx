@@ -10,6 +10,8 @@ import {
   Modal
 } from 'antd'
 
+
+import AddForm from './add-form'
 import { reqRoles } from '../../api'
 import { fromateDate } from '../../utils/dateUtils'
 import LinkButton from '../../components/link-button'
@@ -104,6 +106,7 @@ export default class Role extends React.Component {
           onCancel={() => this.setState({ isShowAdd: false })}
         >
 
+          <AddForm />
         </Modal>
       </Card>
     )
