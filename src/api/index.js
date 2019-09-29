@@ -99,3 +99,11 @@ export const reqUpdateStatus = (productId, status) => ajax(BASE + '/manage/produ
 // 删除图片
 export const reqDeleteImg = (name) => ajax.post(BASE + '/manage/img/delete', { name })
 
+// 添加/修改商品
+export const reqAddUpdateProduct = (product) => ajax.post(
+    BASE + '/manage/product/' + (product._id ? 'update' : 'add'),
+    product
+)
+
+// 获取角色
+export const reqRoles = () => ajax(BASE + '/manage/role/list')
