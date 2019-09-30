@@ -107,7 +107,7 @@ export default class Category extends Component {
    * 点击取消的回调
    */
   handleCancel = () => {
-    this.form.resetFields() // 重置输入数据(变成了初
+    this.form.resetFields() // 重置输入数据(变成了初始值)
     this.setState({
       showStatus: 0
     })

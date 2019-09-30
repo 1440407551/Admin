@@ -107,3 +107,11 @@ export const reqAddUpdateProduct = (product) => ajax.post(
 
 // 获取角色
 export const reqRoles = () => ajax(BASE + '/manage/role/list')
+
+// 添加角色
+export const reqAddRole = (roleName) => ajax.post(BASE + '/manage/role/add', {
+    roleName
+})
+
+// 更新角色
+export const reqUpdateRole = (role) => ajax.post(BASE + '/manage/role/update', role)
