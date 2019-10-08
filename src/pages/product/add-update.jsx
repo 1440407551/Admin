@@ -65,16 +65,12 @@ class ProductAddUpdate extends React.Component {
         this.props.form.validateFields(async (err, values) => {
             if (!err) {
                 const { name, desc, price, categoryId } = values
-                console.log('发送请求 ', name, desc, price, categoryId)
-
 
                 // 收集上传的图片文件名的数组
                 const imgs = this.pwRef.current.getImgs()
-                console.log('imgs', imgs)
 
                 // 输入的商品详情的标签字符串
                 const detail = this.editorRef.current.getDetail()
-                console.log('detail', detail)
 
                 // 封装product对象
                 const product = { name, desc, price, categoryId, imgs, detail }

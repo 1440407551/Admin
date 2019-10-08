@@ -6,7 +6,7 @@ import {
     List,
 } from 'antd'
 
-import { reqCategory } from '../../api'
+import { reqCategory, reqProduct } from '../../api'
 import { BASE_IMG } from '../../utils/Constants'
 import LinkButton from '../../components/link-button'
 import memoryUtils from '../../utils/memoryUtils'
@@ -17,7 +17,8 @@ const Item = List.Item
 export default class ProductDetail extends React.Component {
 
     state = {
-        categoryName: ''
+        categoryName: '',
+        product: memoryUtils.product || {}
     }
 
     getCategory = async (categoryId) => {
@@ -30,19 +31,27 @@ export default class ProductDetail extends React.Component {
         }
     }
 
-    componentDidMount() {
-        const product = memoryUtils.product
-        if (product.categoryId) {
+    async componentDidMount() {
+        let product = this.state.product
+        if (product._id) { // 如果商品有数据，获取对应的分类
             this.getCategory(product.categoryId)
+        } else {
+            const id = this.props.match.params.id // 如果在当前页面刷新，就获取从上个页面传过来的id值(地址栏)
+            const result = await reqProduct(id)
+            if (result.status === 0) {
+                product = result.data
+                this.setState({
+                    product
+                })
+                this.getCategory(product.categoryId)
+            }
         }
     }
 
     render() {
         const { categoryName } = this.state
-        const product = memoryUtils.product
-        if (!product || !product._id) {
-            return <Redirect to="/product" />
-        }
+        const product = this.state.product
+
         const title = (
             <span>
                 <LinkButton onClick={() => this.props.history.goBack()}>
@@ -74,7 +83,7 @@ export default class ProductDetail extends React.Component {
                         <span className="detail-left">商品图片:</span>
                         <span>
                             {
-                                product.imgs.map(img => <img
+                               product.imgs && product.imgs.map(img => <img
                                     key={img} className="detail-img" src={BASE_IMG + img} alt="img"
                                 />)
                             }

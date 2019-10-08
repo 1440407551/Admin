@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { Menu, Icon } from 'antd'
 
+import memoryUtils from '../../utils/memoryUtils'
 import menuList from '../../config/menuConfig'
 import './index.less'
 import logo from '../../assets/images/logo.png'
@@ -28,37 +29,39 @@ class LeftNav extends React.Component {
 
         return menuList.reduce((pre, item) => {
             // 可能向pre添加<Menu.Item>
-            if (!item.children) {
-                pre.push(
-                    <Menu.Item key={item.key}>
-                        <Link to={item.key}>
-                            <Icon type={item.icon} />
-                            <span>{item.title}</span>
-                        </Link>
-                    </Menu.Item>
-                )
-            } else { // 可能向pre添加<SubMent>
-                /**
-                 * 判断当前 item 的 key 是否是我需要的 openKey
-                 * 查找 item 的所有 children 中 cItem 的 key，看是否有一个跟请求的 path 匹配
-                 */
-                const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
-                if (cItem) {
-                    this.openKey = item.key
-                }
-                pre.push(
-                    <SubMenu
-                        key={item.key}
-                        title={
-                            <span>
+            if (this.hasAuth(item)) {
+                if (!item.children) {
+                    pre.push(
+                        <Menu.Item key={item.key}>
+                            <Link to={item.key}>
                                 <Icon type={item.icon} />
                                 <span>{item.title}</span>
-                            </span>
-                        }
-                    >
-                        {this.getMenuNodes2(item.children)}
-                    </SubMenu>
-                )
+                            </Link>
+                        </Menu.Item>
+                    )
+                } else { // 可能向pre添加<SubMent>
+                    /**
+                     * 判断当前 item 的 key 是否是我需要的 openKey
+                     * 查找 item 的所有 children 中 cItem 的 key，看是否有一个跟请求的 path 匹配
+                     */
+                    const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
+                    if (cItem) {
+                        this.openKey = item.key
+                    }
+                    pre.push(
+                        <SubMenu
+                            key={item.key}
+                            title={
+                                <span>
+                                    <Icon type={item.icon} />
+                                    <span>{item.title}</span>
+                                </span>
+                            }
+                        >
+                            {this.getMenuNodes2(item.children)}
+                        </SubMenu>
+                    )
+                }
             }
             return pre
         }, [])
@@ -94,6 +97,33 @@ class LeftNav extends React.Component {
                 </SubMenu>
             )
         })
+    }
+
+    /**
+     * 判断当前用户是否有此item对应的权限
+     */
+    hasAuth = (item) => {
+        // 得到当前用户的所有权限
+        const user = memoryUtils.user
+        const menus = user.role.menus
+        // console.log(menu)
+        // 1. 如果当前用户是admin
+        // 2. 如果item是公开的
+        // 3. 当前用户有此item权限
+        if (user.username === 'admin' || item.public || menus.indexOf(item.key) != -1) {
+            return true
+        }
+
+        // 如果当前用户有item的某个子节点的权限, 当前item也应该显示
+        if (item.children) {
+            const cItem = item.children.find(cItem => menus.indexOf(cItem.key) != -1)
+            if (cItem) {
+                return !!cItem
+            }
+        }
+
+
+        return false
     }
 
     /**

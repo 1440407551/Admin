@@ -115,3 +115,25 @@ export const reqAddRole = (roleName) => ajax.post(BASE + '/manage/role/add', {
 
 // 更新角色
 export const reqUpdateRole = (role) => ajax.post(BASE + '/manage/role/update', role)
+
+// 获取所有用户列表
+export const reqUsers = () => ajax(BASE + '/manage/user/list')
+
+
+// 添加/更新用户
+export const reqAddOrUpdateUser = (user) => ajax.post(
+    BASE + '/manage/user/' + (user._id ? 'update' : 'add'),
+    user
+)
+
+// 删除用户
+export const reqDeleteUser = (userId) => ajax.post(BASE + '/manage/user/delete', {
+    userId
+})
+
+// 根据商品ID获取商品
+export const reqProduct = (productId) => ajax(BASE + '/manage/product/info', {
+    params: {
+        productId
+    }
+})
