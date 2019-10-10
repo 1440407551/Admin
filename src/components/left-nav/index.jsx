@@ -110,13 +110,13 @@ class LeftNav extends React.Component {
         // 1. 如果当前用户是admin
         // 2. 如果item是公开的
         // 3. 当前用户有此item权限
-        if (user.username === 'admin' || item.public || menus.indexOf(item.key) != -1) {
+        if (user.username === 'admin' || item.public || menus.indexOf(item.key) !== -1) {
             return true
         }
 
         // 如果当前用户有item的某个子节点的权限, 当前item也应该显示
         if (item.children) {
-            const cItem = item.children.find(cItem => menus.indexOf(cItem.key) != -1)
+            const cItem = item.children.find(cItem => menus.indexOf(cItem.key) !== -1)
             if (cItem) {
                 return !!cItem
             }

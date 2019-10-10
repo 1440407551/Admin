@@ -1,10 +1,7 @@
 import React from 'react'
 import {
   Card,
-  Select,
-  Input,
   Button,
-  Icon,
   Table,
   message,
   Modal
