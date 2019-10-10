@@ -1,7 +1,9 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { Menu, Icon } from 'antd'
+import { connect } from 'react-redux'
 
+import { setHeaderTitle } from '../../redux/actions'
 import memoryUtils from '../../utils/memoryUtils'
 import menuList from '../../config/menuConfig'
 import './index.less'
@@ -31,9 +33,14 @@ class LeftNav extends React.Component {
             // 可能向pre添加<Menu.Item>
             if (this.hasAuth(item)) {
                 if (!item.children) {
+
+                    // 找到path对应的item, 更新headerTitle状态, 值是item的title
+                    if (item.key === path || path.indexOf(item.key) === 0) {
+                        this.props.setHeaderTitle(item.title)
+                    }
                     pre.push(
                         <Menu.Item key={item.key}>
-                            <Link to={item.key}>
+                            <Link to={item.key} onClick={() => this.props.setHeaderTitle(item.title)}>
                                 <Icon type={item.icon} />
                                 <span>{item.title}</span>
                             </Link>
@@ -208,7 +215,10 @@ class LeftNav extends React.Component {
  * 新组件向 LeftNav 传递三个特别属性：history/location/match
  * 结果：LeftNav 可以操作路由相关语法了
  */
-export default withRouter(LeftNav)
+export default connect(
+    state => ({}),
+    { setHeaderTitle }
+)(withRouter(LeftNav))
 
 
 /**

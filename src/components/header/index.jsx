@@ -1,6 +1,7 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { Modal } from 'antd';
+import { connect } from 'react-redux'
 
 import LinkButton from '../link-button'
 import { reqWeather } from '../../api'
@@ -104,7 +105,8 @@ class Header extends React.Component {
         const { currentTime, dayPictureUrl, weather } = this.state
         const user = memoryUtils.user
         // 得到当前需要显示的 title
-        const title = this.getTitle()
+        // const title = this.getTitle()
+        const title = this.props.headerTitle
         return (
             <div className="header">
                 <div className="header-top">
@@ -129,4 +131,9 @@ class Header extends React.Component {
 /**
  * 包装成路由组件，使得 this.props 不是空对象
  */
-export default withRouter(Header)
+
+export default connect(
+    state => ({ // state: 总状态: {headerTitle, user}
+        headerTitle: state.headerTitle
+    })
+)(withRouter(Header))
