@@ -8,7 +8,7 @@ import LinkButton from '../link-button'
 import { reqWeather } from '../../api'
 import { fromateDate } from '../../utils/dateUtils'
 import menuList from '../../config/menuConfig'
-import storageUtils from '../../utils/storageUtils'
+// import storageUtils from '../../utils/storageUtils'
 
 
 import './index.less'
