@@ -2,4 +2,13 @@
  * 包含N个action对象的type常量名称的模块
  */
 
-export const SET_HEADE_TITLE = 'set_header_title'
+export const SET_HEADE_TITLE = 'set_header_title'//设置头部标题
+
+export const LOGIN_SUCCESS = 'login_success'// 登录成功
+export const LOGIN_FAIL = 'login_fail'// 登录失败
+
+export const RECEIVE_USER = 'receive_user' // 接收用户信息
+export const SHOW_ERROR = 'show_error' // 显示错误信息
+
+export const LOGOUT = 'logout' // 退出登录
+

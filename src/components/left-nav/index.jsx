@@ -4,7 +4,6 @@ import { Menu, Icon } from 'antd'
 import { connect } from 'react-redux'
 
 import { setHeaderTitle } from '../../redux/actions'
-import memoryUtils from '../../utils/memoryUtils'
 import menuList from '../../config/menuConfig'
 import './index.less'
 import logo from '../../assets/images/logo.png'
@@ -111,7 +110,7 @@ class LeftNav extends React.Component {
      */
     hasAuth = (item) => {
         // 得到当前用户的所有权限
-        const user = memoryUtils.user
+        const user = this.props.user
         const menus = user.role.menus
         // console.log(menu)
         // 1. 如果当前用户是admin
@@ -216,7 +215,7 @@ class LeftNav extends React.Component {
  * 结果：LeftNav 可以操作路由相关语法了
  */
 export default connect(
-    state => ({}),
+    state => ({user: state.user}),
     { setHeaderTitle }
 )(withRouter(LeftNav))
 

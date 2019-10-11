@@ -3,11 +3,11 @@ import { withRouter } from 'react-router-dom'
 import { Modal } from 'antd';
 import { connect } from 'react-redux'
 
+import { logout } from '../../redux/actions'
 import LinkButton from '../link-button'
 import { reqWeather } from '../../api'
 import { fromateDate } from '../../utils/dateUtils'
 import menuList from '../../config/menuConfig'
-import memoryUtils from '../../utils/memoryUtils'
 import storageUtils from '../../utils/storageUtils'
 
 
@@ -32,13 +32,7 @@ class Header extends React.Component {
             title: '确认退出吗？',
             onOk: () => {
                 console.log('ok')
-                // 确定后，删除存储的用户信息
-                // loacl中的
-                storageUtils.removeUser()
-                // 内存中的
-                memoryUtils.user = {}
-                // 跳转到登录页面
-                this.props.history.replace()
+                this.props.logout()
             },
             onCancel() {
                 console.log('cancel')
@@ -103,7 +97,7 @@ class Header extends React.Component {
 
     render() {
         const { currentTime, dayPictureUrl, weather } = this.state
-        const user = memoryUtils.user
+        const user = this.props.user
         // 得到当前需要显示的 title
         // const title = this.getTitle()
         const title = this.props.headerTitle
@@ -134,6 +128,8 @@ class Header extends React.Component {
 
 export default connect(
     state => ({ // state: 总状态: {headerTitle, user}
+        user: state.user,
         headerTitle: state.headerTitle
-    })
+    }),
+    { logout }
 )(withRouter(Header))

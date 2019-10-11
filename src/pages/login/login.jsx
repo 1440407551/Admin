@@ -1,6 +1,9 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Form, Icon, Input, Button, message } from 'antd'
+import { connect } from 'react-redux'
+
+import { login } from '../../redux/actions'
 import memoryUtils from '../../utils/memoryUtils'
 import storageUtils from '../../utils/storageUtils'
 import { reqLogin } from '../../api/index'
@@ -25,21 +28,7 @@ class Login extends React.Component {
         // 对表单所有字段进行统一的验证
         this.props.form.validateFields(async (err, { username, password }) => {
             if (!err) {
-                const result = await reqLogin(username, password)
-                if (result.status === 0) {
-                    // 将 user 信息保存到 local
-                    const user = result.data
-                    // localStorage.setItem('user_key', JSON.stringify(user))
-                    storageUtils.saveUser(user)
-                    // 保存到内存中
-                    memoryUtils.user = user
-                    
-                    // 跳转到管理界面
-                    message.success('登录成功')
-                    this.props.history.replace('/')
-                } else {
-                    message.error(result.msg)
-                }
+                this.props.login(username, password)
             }
         })
     };
@@ -65,11 +54,13 @@ class Login extends React.Component {
     render() {
 
         // 读取保存的 user，如果存在，直接跳转到管理界面
-        const user = memoryUtils.user
+        const user = this.props.user
         if (user._id) {
             // this.props.history.replace('/login') // 事件回调函数中进行路由跳转
-            return <Redirect to="/" /> // 自动跳转到指定的路由路径
+            return <Redirect to="/home" /> // 自动跳转到指定的路由路径
         }
+
+        const errorMsg = user.errorMsg
 
         const { getFieldDecorator } = this.props.form
         return (
@@ -79,6 +70,7 @@ class Login extends React.Component {
                     <h1>后台管理系统</h1>
                 </div>
                 <div className="login-content">
+                    {errorMsg ? <div style={{ color: 'red' }}>{errorMsg}</div> : null}
                     <h1>用户登录</h1>
                     <Form onSubmit={this.handleSubmit} className="login-form">
                         <Item>
@@ -129,7 +121,12 @@ class Login extends React.Component {
 
 const WrapperForm = Form.create()(Login)
 
-export default WrapperForm
+export default connect(
+    state => ({
+        user: state.user
+    }),
+    { login }
+)(WrapperForm)
 
 /**
  用户名/密码的的合法性要求

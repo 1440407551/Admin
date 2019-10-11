@@ -5,7 +5,10 @@ import { combineReducers } from 'redux'
 import storageUtils from '../utils/storageUtils'
 
 import {
-    SET_HEADE_TITLE
+    SET_HEADE_TITLE,
+    RECEIVE_USER,
+    SHOW_ERROR,
+    LOGOUT
 } from './action-types'
 
 /**
@@ -28,10 +31,13 @@ function headerTitle(state = initHeaderTitle, action) {
 const initUser = storageUtils.getUser() // 读取local中保存user作为初始值
 function user(state = initUser, action) {
     switch (action.type) {
-        // case value:
-
-        //     break;
-
+        case RECEIVE_USER:
+            return action.user
+        case LOGOUT:
+            return {}
+        case SHOW_ERROR:
+            // 不能直接修改状态数据内部的数据
+            return { ...state, errorMsg: action.errorMsg } // 返回一个新的需要的数据
         default:
             return state
     }
