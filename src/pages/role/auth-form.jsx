@@ -76,7 +76,7 @@ class AuthForm extends React.Component {
     }
 
     render() {
-        // const { role } = this.props
+        const { role } = this.props
         const { checkedKeys } = this.state
 
 
@@ -87,7 +87,7 @@ class AuthForm extends React.Component {
         return (
             <div>
                 <Item label="角色名称" {...formItemLayout}>
-                    <Input disabled></Input>
+                    <Input value={role.name} disabled></Input>
                 </Item>
 
                 <Tree
