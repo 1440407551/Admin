@@ -8,8 +8,11 @@ import jsonp from 'jsonp'
 import { message } from 'antd'
 
 // 请求登录
-const BASE = 'http://172.81.227.158:5000/api'
-// const BASE = 'http://localhost:5000/api'
+// const BASE = 'http://www.xcio.cn/api2'
+
+// const BASE = 'http://localhost:5000'
+// const BASE = ''
+const BASE = 'http://reactadmin.xcio.cn/api2'
 export const reqLogin = (username, password) => (
     // ajax({
     //     method: 'post',

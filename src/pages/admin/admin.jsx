@@ -48,7 +48,10 @@ export default class Admin extends React.Component {
                             <Redirect to="/home" />
                         </Switch>
                     </Content>
-                    <Footer style={{ textAlign: 'center', color: 'rgba(0, 0, 0, 0.5)' }}>推荐使用谷歌浏览器，可以获得更佳页面操作体验</Footer>
+                    <Footer style={{ textAlign: 'center', color: 'rgba(0, 0, 0, 0.5)' }}>
+                        <div>推荐使用谷歌浏览器，可以获得更佳页面操作体验</div>
+                        <div>© 2018 - {new Date().getFullYear()} 小城版权所有 <a href="http://www.beian.miit.gov.cn/" target="_blank">粤ICP备19149052号</a></div>
+                    </Footer>
                 </Layout>
             </Layout>
         )

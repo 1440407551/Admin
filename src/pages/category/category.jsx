@@ -52,6 +52,7 @@ export default class Category extends Component {
     // 发异步ajax请求
     const result = await reqCategorys()
     this.setState({ loading: false })
+    debugger
     if (result.status === 0) { // 成功了
       // 更新状态categorys数据
       const categorys = result.data

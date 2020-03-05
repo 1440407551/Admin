@@ -51,7 +51,7 @@ export default class User extends React.Component {
         title: '所属角色',
         dataIndex: 'role_id',
         // render: role_id => this.state.roles.find(role => role._id === role_id).name
-        render: role_id => this.roleNames[role_id].name
+        // render: role_id => this.roleNames[role_id].name
       },
       {
         title: '操作',
@@ -69,13 +69,13 @@ export default class User extends React.Component {
     const result = await reqUsers()
     if (result.status === 0) {
       const { users, roles } = result.data
-
+      // debugger
       // 生成一个对象容器(属性名: 角色的ID值, 属性值: 角色的名称)
       this.roleNames = roles.reduce((pre, role) => {
         pre[role._id] = role
         return pre
       }, {})
-
+      console.log(this.roleNames)
       this.setState({
         users,
         roles
